@@ -1,65 +1,49 @@
-const Joi = require("@hapi/joi");
+const { Customer, validate } = require("../models/customer");
 const express = require("express");
 const router = express.Router();
 
-const customers = [
-  { id: 1, name: "customer1" },
-  { id: 2, name: "customer2" },
-  { id: 3, name: "customer3" },
-];
-
-const validateCustomer = (customer) => {
-  const schema = Joi.object({
-    name: Joi.string().min(3).max(50).required(),
-  });
-  return schema.validate(customer);
-};
-
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const customers = await Customer.find().sort("name");
   res.send(customers);
 });
 
-router.get("/:id", (req, res) => {
-  const customer = customers.find((c) => {
-    return c.id === parseInt(req.params.id);
-  });
-  if (!customer) {
-    return res.status(404).send("The customer with given ID was not found");
-  }
+router.get("/:id", async (req, res) => {
+  const customer = await Customer.findById(req.params.id);
+  if (!customer) return res.status(404).send("The customer with given ID was not found");
   res.send(customer);
 });
 
-router.post("/", (req, res) => {
-  const { error } = validateCustomer(req.body);
+router.post("/", async (req, res) => {
+  const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const customer = {
-    id: customers.length + 1,
+  const customer = new Customer({
     name: req.body.name,
-  };
-  customers.push(customer);
+    phone: req.body.phone,
+  });
+  await customer.save();
   res.send(customer);
 });
 
-router.put("/:id", (req, res) => {
-  const { error } = validateCustomer(req.body);
+router.put("/:id", async (req, res) => {
+  const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const customer = customers.find((c) => c.id === parseInt(req.params.id));
+  const customer = await Customer.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name,
+      phone: req.body.phone,
+    },
+    { new: true }
+  );
   if (!customer) return res.status(404).send("The customer with given ID was not found");
-
-  customer.name = req.body.name;
-
   res.send(customer);
 });
 
-router.delete("/:id", (req, res) => {
-  const customer = customers.find((c) => c.id === parseInt(req.params.id));
+router.delete("/:id", async (req, res) => {
+  const customer = await Customer.findByIdAndRemove(req.params.id);
   if (!customer) return res.status(404).send("The customer with given ID was not found");
-
-  const index = customers.indexOf(customer);
-  customers.splice(index, 1);
-
   res.send(customer);
 })
 
