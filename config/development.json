@@ -1,0 +1,6 @@
+{
+  "name": "BPA CRM System - Development",
+  "mail": {
+    "host": "dev-mail-server"
+  }
+}

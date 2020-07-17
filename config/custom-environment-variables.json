@@ -1,0 +1,7 @@
+{
+  "mail": {
+    "password": "crm_mail_pw"
+  },
+  "jwtPrivateKey": "crm_pk",
+  "db": "crm_db"
+}

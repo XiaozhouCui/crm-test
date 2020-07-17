@@ -1,0 +1,5 @@
+{
+  "name": "BPA Customer Relationship Management System",
+  "jwtPrivateKey": "1234",
+  "db": "mongodb://localhost/crm"
+}
