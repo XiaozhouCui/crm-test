@@ -1,6 +1,7 @@
 const express = require("express");
 const home = require("../routes/home");
 const customers = require("../routes/customers");
+const users = require("../routes/users");
 
 module.exports = function (app) {
   // built-in middleware: parse json in req and populate req.body
@@ -11,6 +12,7 @@ module.exports = function (app) {
   app.use(express.static("public"));
   // route handlers start here
   app.use("/api/customers", customers);
+  app.use("/api/users", users);
   app.use("/", home);
 
 };
