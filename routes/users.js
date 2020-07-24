@@ -1,12 +1,12 @@
-// const auth = require("../middleware/auth"); // authorisation
+const auth = require("../middleware/auth");
 const { User, validate } = require("../models/user");
 const _ = require("lodash");
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const router = express.Router();
 
-router.get("/me", async (req, res) => {
-  const user = await User.findById(req.body._id).select("-password"); // exclude the hashed password
+router.get("/me", auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password"); // exclude the hashed password
   if (!user) return res.status(404).send("User ID not found.");
   res.send(user);
 });
