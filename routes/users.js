@@ -1,7 +1,7 @@
 // const auth = require("../middleware/auth"); // authorisation
 const { User, validate } = require("../models/user");
 const _ = require("lodash");
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const express = require("express");
 const router = express.Router();
 
@@ -20,8 +20,8 @@ router.post("/", async (req, res) => {
   if (user) return res.status(400).send("User already registered.");
 
   user = new User(_.pick(req.body, ["name", "email", "password"]));
-  // const salt = await bcrypt.genSalt(10); // salt: 10 rounds by default
-  // user.password = await bcrypt.hash(user.password, salt); // hash the password
+  const salt = await bcrypt.genSalt(10); // salt: 10 rounds by default
+  user.password = await bcrypt.hash(user.password, salt); // hash the password
   await user.save();
 
   const token = user.generateAuthToken();
