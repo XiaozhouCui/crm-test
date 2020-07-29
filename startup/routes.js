@@ -2,6 +2,7 @@ const express = require("express");
 const home = require("../routes/home");
 const customers = require("../routes/customers");
 const users = require("../routes/users");
+const login = require("../routes/login");
 
 module.exports = function (app) {
   // built-in middleware: parse json in req and populate req.body
@@ -13,6 +14,7 @@ module.exports = function (app) {
   // route handlers start here
   app.use("/api/customers", customers);
   app.use("/api/users", users);
+  app.use("/api/login", login);
   app.use("/", home);
 
 };
