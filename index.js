@@ -6,7 +6,7 @@ require("./startup/db")();
 require("./startup/config")(app);
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3900;
 const server = app.listen(port, () => console.log(`Listening to port ${port}...`));
 
 module.exports = server;
