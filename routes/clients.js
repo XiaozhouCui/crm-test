@@ -17,9 +17,15 @@ router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const client = new Client({
+  let client = await Client.findOne({ name: req.body.name });
+  if (client) return res.status(400).send("This orgnisation name is already used, please use another one.");
+
+  client = new Client({
     name: req.body.name,
     phone: req.body.phone,
+    email: req.body.email,
+    address: req.body.address,
+    logoUrl: req.body.logoUrl,
   });
   await client.save();
   res.send(client);
@@ -34,6 +40,9 @@ router.put("/:id", async (req, res) => {
     {
       name: req.body.name,
       phone: req.body.phone,
+      email: req.body.email,
+      address: req.body.address,
+      logoUrl: req.body.logoUrl,
     },
     { new: true }
   );
