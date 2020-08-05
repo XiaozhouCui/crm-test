@@ -13,14 +13,13 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    minlength: 3,
     maxlength: 256,
     unique: true, // email must be unique
   },
   password: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 4,
     maxlength: 1024, // for hashed password
   },
   role: {
@@ -41,12 +40,13 @@ userSchema.methods.generateAuthToken = function () {
 
 const User = mongoose.model("User", userSchema);
 
+// expecting a clientId in req.body from client side, as the organisation id
 function validateUser(user) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
-    email: Joi.string().min(5).max(256).required().email(),
-    password: Joi.string().min(5).max(50).required(), // password before hash
-    clientId: Joi.string().max(50),
+    email: Joi.string().max(256).required().email(),
+    password: Joi.string().min(4).max(50).required(), // password before hash
+    clientId: Joi.objectId(),
   });
   return schema.validate(user);
 }
