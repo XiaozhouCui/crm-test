@@ -9,11 +9,8 @@ const CartSchema = new mongoose.Schema(
     },
     items: [
       {
-        itemId: String,
-        // itemId: {
-        //   type: Schema.Types.ObjectId,
-        //   ref: 'Page',
-        // },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Module",
       },
     ],
     active: {
@@ -26,13 +23,12 @@ const CartSchema = new mongoose.Schema(
 
 const Cart = mongoose.model("Cart", CartSchema);
 
-function validateCart(cart) {
+function validateCart(req) {
   const schema = Joi.object({
     userId: Joi.objectId().required(),
-    items: Joi.array().required(),
-    itemId: Joi.string().min(3).max(256),
+    items: Joi.array().items(Joi.objectId()).required(),
   });
-  return schema.validate(cart);
+  return schema.validate(req);
 }
 
 module.exports.Cart = Cart;

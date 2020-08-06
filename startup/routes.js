@@ -3,6 +3,7 @@ const home = require("../routes/home");
 const clients = require("../routes/clients");
 const users = require("../routes/users");
 const carts = require("../routes/carts");
+const modules = require("../routes/modules");
 const login = require("../routes/login");
 
 module.exports = function (app) {
@@ -13,6 +14,7 @@ module.exports = function (app) {
   app.use("/api/clients", clients);
   app.use("/api/users", users);
   app.use("/api/carts", carts);
+  app.use("/api/modules", modules);
   app.use("/api/login", login);
   app.use("/", home);
 

@@ -1,8 +1,8 @@
 const Joi = require("@hapi/joi");
 const mongoose = require("mongoose");
 
-const Page = mongoose.model(
-  "Page",
+const Module = mongoose.model(
+  "Module",
   new mongoose.Schema({
     name: {
       type: String,
@@ -29,12 +29,15 @@ const Page = mongoose.model(
   })
 );
 
-function validatePage(page) {
+function validateModule(mod) {
   const schema = Joi.object({
-    title: Joi.string().min(3).max(256).required(),
+    name: Joi.string().min(3).max(256).required(),
+    title: Joi.string().min(5).max(256),
+    subtitle: Joi.string().min(5).max(256),
+    program: Joi.string().min(5).max(256),
   });
-  return schema.validate(page);
+  return schema.validate(mod);
 }
 
-module.exports.Page = Page;
-module.exports.validate = validatePage;
+module.exports.Module = Module;
+module.exports.validate = validateModule;
