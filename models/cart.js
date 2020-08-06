@@ -1,31 +1,39 @@
 const mongoose = require("mongoose");
+const Joi = require("@hapi/joi");
 
 const CartSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
     },
     items: [
       {
-        itemId: {
-          type: Schema.Types.ObjectId,
-          ref: 'Page',
-        }
-      }
+        itemId: String,
+        // itemId: {
+        //   type: Schema.Types.ObjectId,
+        //   ref: 'Page',
+        // },
+      },
     ],
     active: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    modifiedOn: {
-      type: Date,
-      default: Date.now
-    }
   },
   { timestamps: true }
 );
 
 const Cart = mongoose.model("Cart", CartSchema);
 
+function validateCart(cart) {
+  const schema = Joi.object({
+    userId: Joi.objectId().required(),
+    items: Joi.array().required(),
+    itemId: Joi.string().min(3).max(256),
+  });
+  return schema.validate(cart);
+}
+
 module.exports.Cart = Cart;
+module.exports.validate = validateCart;
