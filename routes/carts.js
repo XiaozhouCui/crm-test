@@ -2,6 +2,7 @@ const { Cart, validate } = require("../models/cart");
 const { User } = require("../models/user");
 const { Module } = require("../models/module");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const express = require("express");
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.post("/", async (req, res) => {
 
   if (req.body.items.length > 0) {
     const modules = await Module.find().select("_id").lean();
-    const moduleIds = modules.map(item => String(item._id));
+    const moduleIds = modules.map((item) => String(item._id));
     for (id of req.body.items) {
       if (!moduleIds.includes(id)) return res.status(400).send(`Invalid module ID: ${id}`);
     }
@@ -60,7 +61,7 @@ router.put("/:id", async (req, res) => {
   res.send(cart);
 });
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const cart = await Cart.findByIdAndRemove(req.params.id);
   if (!cart) return res.status(404).send("The cart with the given ID was not found.");
   res.send(cart);
