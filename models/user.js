@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "coordinator", "client"],
     default: "client",
   },
+  cart: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Module",
+    },
+  ],
   organisation: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Client"
@@ -40,13 +46,14 @@ userSchema.methods.generateAuthToken = function () {
 
 const User = mongoose.model("User", userSchema);
 
-// expecting a clientId in req.body from client side, as the organisation id
+// expecting a clientId in req.body from front end, as the organisation id
 function validateUser(user) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     email: Joi.string().max(256).required().email(),
     password: Joi.string().min(4).max(50).required(), // password before hash
     clientId: Joi.objectId(),
+    cart: Joi.array().items(Joi.objectId()),
   });
   return schema.validate(user);
 }

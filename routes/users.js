@@ -7,7 +7,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.user._id).populate("organisation").select("-password"); // exclude the hashed password
+  const user = await User.findById(req.user._id).populate("organisation cart").select("-password"); // exclude the hashed password
   if (!user) return res.status(404).send("User ID not found.");
   res.send(user);
 });
@@ -28,12 +28,14 @@ router.post("/", async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       organisation: client,
+      cart: req.body.cart,
     });
   } else {
     user = new User({
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
+      cart: req.body.cart,
     });
   }
 
