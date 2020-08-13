@@ -26,6 +26,7 @@ const Joi = require("@hapi/joi");
 function validateCart(req) {
   const schema = Joi.object({
     userId: Joi.objectId().required(),
+    moduleId: Joi.objectId(),
     cart: Joi.array().items(Joi.objectId()).unique().required(),
   });
   return schema.validate(req);

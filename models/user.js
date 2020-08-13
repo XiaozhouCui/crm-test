@@ -44,6 +44,31 @@ userSchema.methods.generateAuthToken = function () {
   return token;
 };
 
+userSchema.methods.addToCart = function(item) {
+  const cartItemIndex = this.cart.findIndex(itemId => {
+    return itemId.toString() === item._id.toString();
+  });
+
+  const updatedCart = [...this.cart]; // clone array because .push() is a mutable method
+  if (cartItemIndex < 0) updatedCart.push(item);
+
+  this.cart = updatedCart;
+  return this.save();
+};
+
+userSchema.methods.removeFromCart = function(item) {
+  const updatedCart = this.cart.filter(itemId => {
+    return itemId.toString() !== item._id.toString();
+  });
+  this.cart = updatedCart;
+  return this.save();
+};
+
+userSchema.methods.clearCart = function() {
+  this.cart = [];
+  return this.save();
+};
+
 const User = mongoose.model("User", userSchema);
 
 // expecting a clientId in req.body from front end, as the organisation id
